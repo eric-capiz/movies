@@ -46,6 +46,20 @@ export interface Credits {
   crew: Crew[];
 }
 
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface GenresResponse {
+  genres: Genre[];
+}
+
+const authHeaders = {
+  Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+  accept: "application/json",
+};
+
 const apiSettings = {
   fetchMovies: async (
     searchTerm: string,
@@ -122,6 +136,89 @@ const apiSettings = {
       return await response.json();
     } catch (error) {
       console.error("Error fetching credits:", error);
+      throw error;
+    }
+  },
+  fetchTrending: async (): Promise<MoviesResponse> => {
+    try {
+      const endpoint: string = `${API_URL}trending/movie/week?language=en-US`;
+
+      const response = await fetch(endpoint, {
+        method: "GET",
+        headers: authHeaders,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Trending fetch failed: ${response.status}`);
+      }
+
+      const data: MoviesResponse = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching trending:", error);
+      throw error;
+    }
+  },
+
+  fetchTopRated: async (): Promise<MoviesResponse> => {
+    try {
+      const endpoint: string = `${API_URL}movie/top_rated?language=en-US`;
+
+      const response = await fetch(endpoint, {
+        method: "GET",
+        headers: authHeaders,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Top rated fetch failed: ${response.status}`);
+      }
+
+      const data: MoviesResponse = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching top rated:", error);
+      throw error;
+    }
+  },
+
+  fetchGenres: async (): Promise<Genre[]> => {
+    try {
+      const endpoint: string = `${API_URL}genre/movie/list?language=en-US`;
+
+      const response = await fetch(endpoint, {
+        method: "GET",
+        headers: authHeaders,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Genres fetch failed: ${response.status}`);
+      }
+
+      const data: GenresResponse = await response.json();
+      return data.genres;
+    } catch (error) {
+      console.error("Error fetching genres:", error);
+      throw error;
+    }
+  },
+
+  fetchByGenre: async (genreId: number): Promise<MoviesResponse> => {
+    try {
+      const endpoint: string = `${API_URL}discover/movie?language=en-US&with_genres=${genreId}`;
+
+      const response = await fetch(endpoint, {
+        method: "GET",
+        headers: authHeaders,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Discover by genre failed: ${response.status}`);
+      }
+
+      const data: MoviesResponse = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching by genre:", error);
       throw error;
     }
   },
