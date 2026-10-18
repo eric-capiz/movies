@@ -2,6 +2,15 @@ import styled from 'styled-components';
 
 export const ThumbWrapper = styled.div`
   position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--cardBg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 0 2px var(--accent);
+    z-index: 2;
+  }
 `;
 
 export const Image = styled.img`
@@ -10,11 +19,9 @@ export const Image = styled.img`
   max-width: 720px;
   transition: all 0.3s;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: 8px;
+  display: block;
   animation: animateMovieThumb 0.5s;
-  :hover {
-    opacity: 0.8;
-  }
   @keyframes animateMovieThumb {
     from {
       opacity: 0;
@@ -34,8 +41,8 @@ export const WatchlistButton = styled.button<{ $saved: boolean }>`
   height: 38px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(28, 28, 28, 0.8);
-  color: ${(props) => (props.$saved ? "#e50914" : "var(--white)")};
+  background: rgba(10, 10, 10, 0.8);
+  color: ${(props) => (props.$saved ? "var(--accent)" : "var(--white)")};
   font-size: 1.3rem;
   line-height: 1;
   cursor: pointer;
@@ -47,11 +54,12 @@ export const WatchlistButton = styled.button<{ $saved: boolean }>`
 
   &:hover {
     transform: scale(1.15);
-    background: rgba(28, 28, 28, 0.95);
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(229, 9, 20, 0.5);
   }
 
   &:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 `;
