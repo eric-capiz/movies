@@ -1,19 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { POSTER_SIZE, BACKDROP_SIZE, IMAGE_BASE_URL } from "../config";
 import { useHomeFetch } from "../hooks/useHomeFetch";
 import { useWatchlistContext } from "../hooks/WatchlistContext";
-import HeroImage from "./HeroImage";
+import HeroImage, { FeaturedMovie } from "./HeroImage";
 import Grid from "./Grid";
 import Thumb from "./Thumb";
 import Row from "./Row";
 import Spinner from "./Spinner";
 import Search from "./Search";
 import Button from "./Button";
+import DecoDivider from "./effects/DecoDivider";
+import Marquee from "./effects/Marquee";
+import SkeletonCard from "./effects/SkeletonCard";
 import NoImage from "../images/no_image.jpg";
 import API, { Movie, Genre } from "../API"; // Add this import
 import {
   PillBar,
   Pill,
+  SectionHeader,
   WatchlistSection,
   WatchlistGrid,
   EmptyMessage,
@@ -98,6 +102,25 @@ const Home = () => {
     }
   };
 
+  const featured: FeaturedMovie[] = useMemo(
+    () =>
+      state.results
+        .filter((m) => m.backdrop_path)
+        .slice(0, 5)
+        .map((m) => ({
+          id: m.id,
+          image: `${IMAGE_BASE_URL}${BACKDROP_SIZE}${m.backdrop_path}`,
+          title: m.original_title,
+          text: m.overview,
+        })),
+    [state.results]
+  );
+
+  const marqueeTitles = useMemo(
+    () => trending.slice(0, 10).map((m) => m.title),
+    [trending]
+  );
+
   if (error) return <div>Something Went Wrong...</div>;
 
   const isBrowsing = !searchTerm && selectedGenre === null;
@@ -108,40 +131,48 @@ const Home = () => {
       ? `${genres.find((g) => g.id === selectedGenre)?.name ?? ""} Movies`
       : "Popular Movies";
 
+  const posterFor = (movie: Movie) =>
+    movie.poster_path
+      ? IMAGE_BASE_URL + POSTER_SIZE + movie.poster_path
+      : NoImage;
+
   return (
     <>
-      {!searchTerm && state.results[1] ? (
-        <HeroImage
-          image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${state.results[1].backdrop_path}`}
-          title={state.results[1].original_title}
-          text={state.results[1].overview}
-        />
+      {!searchTerm && featured.length > 0 ? (
+        <HeroImage movies={featured} />
       ) : null}
       <Search setSeachTerm={setSearchTerm} />
+
+      {isBrowsing && marqueeTitles.length > 0 && (
+        <Marquee titles={marqueeTitles} />
+      )}
 
       {isBrowsing && (
         <>
           <Row title="Trending Now" movies={trending} />
+          <DecoDivider />
           <Row title="Top Rated" movies={topRated} />
+          <DecoDivider />
           <WatchlistSection>
-            <h2>My Watchlist</h2>
+            <SectionHeader>My Watchlist</SectionHeader>
             {watchlistMovies.length > 0 ? (
               <WatchlistGrid>
                 {watchlistMovies.map((movie) => (
                   <Thumb
                     key={movie.id}
                     clickable
-                    image={
-                      movie.poster_path
-                        ? IMAGE_BASE_URL + POSTER_SIZE + movie.poster_path
-                        : NoImage
-                    }
+                    image={posterFor(movie)}
                     movieId={movie.id}
+                    title={movie.title}
+                    rating={movie.vote_average}
                   />
                 ))}
               </WatchlistGrid>
             ) : (
-              <EmptyMessage>No movies saved yet.</EmptyMessage>
+              <EmptyMessage>
+                No movies saved yet — tap the &#9825; on any poster to keep it
+                here.
+              </EmptyMessage>
             )}
           </WatchlistSection>
         </>
@@ -168,19 +199,23 @@ const Home = () => {
       )}
 
       {genreLoading ? (
-        <Spinner />
+        <WatchlistGrid
+          style={{ maxWidth: "var(--maxWidth)", margin: "0 auto", padding: "20px" }}
+        >
+          {Array.from({ length: 8 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </WatchlistGrid>
       ) : (
         <Grid header={gridHeader}>
           {gridMovies.map((movie: Movie) => (
             <Thumb
               key={movie.id}
               clickable
-              image={
-                movie.poster_path
-                  ? IMAGE_BASE_URL + POSTER_SIZE + movie.poster_path
-                  : NoImage
-              }
+              image={posterFor(movie)}
               movieId={movie.id}
+              title={movie.title}
+              rating={movie.vote_average}
             />
           ))}
         </Grid>

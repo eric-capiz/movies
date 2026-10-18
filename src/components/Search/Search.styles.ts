@@ -15,13 +15,13 @@ export const Content = styled.div`
   height: 55px;
   background: var(--cardBg);
   margin: 0 auto;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  border: 1px solid rgba(201, 169, 106, 0.35);
   color: var(--white);
   transition: border-color 0.3s, box-shadow 0.3s;
   &:focus-within {
     border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.3), 0 0 20px rgba(229, 9, 20, 0.2);
+    box-shadow: 0 0 0 2px rgba(201, 169, 106, 0.25), 0 0 20px rgba(201, 169, 106, 0.15);
   }
   img {
     position: absolute;
@@ -29,6 +29,7 @@ export const Content = styled.div`
     top: 14px;
     width: 30px;
     opacity: 0.6;
+    filter: sepia(0.6) saturate(1.5) hue-rotate(-15deg);
   }
   input {
     font-size: 20px;
@@ -42,8 +43,9 @@ export const Content = styled.div`
     height: 40px;
     color: var(--white);
     outline: none;
+    letter-spacing: 1px;
     &::placeholder {
-      color: #666;
+      color: #6b6555;
     }
     :focus {
       outline: none;

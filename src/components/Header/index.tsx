@@ -17,7 +17,9 @@ const Header = () => {
           to="/"
           onClick={handleLogoClick}
         >
-          <Logo>Zeta Movies</Logo>
+          <Logo>
+            Zeta <span>Movies</span>
+          </Logo>
         </Link>
         <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
           <TMDBLogoImg src={TMDBLogo} alt="rmdb-logo" />
