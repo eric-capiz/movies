@@ -16,25 +16,28 @@ export const PillBar = styled.div`
 export const Pill = styled.button<{ $active: boolean }>`
   flex: 0 0 auto;
   padding: 8px 18px;
-  border-radius: 999px;
+  border-radius: 4px;
   font-size: var(--fontSmall);
   font-family: "Abel", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.25s;
   border: 1px solid
     ${(props) =>
-      props.$active ? "var(--white)" : "rgba(255, 255, 255, 0.25)"};
+      props.$active ? "var(--accent)" : "rgba(255, 255, 255, 0.2)"};
   background: ${(props) =>
-    props.$active ? "var(--white)" : "rgba(28, 28, 28, 0.8)"};
-  color: ${(props) => (props.$active ? "var(--darkGrey)" : "var(--white)")};
+    props.$active ? "var(--accent)" : "rgba(26, 26, 26, 0.8)"};
+  color: var(--white);
 
   &:hover {
-    border-color: var(--white);
+    border-color: var(--accent);
     transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(229, 9, 20, 0.4);
   }
 
   &:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 `;
@@ -46,8 +49,13 @@ export const WatchlistSection = styled.div`
 
   h2 {
     color: var(--white);
-    font-size: var(--fontBig);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     margin: 30px 0 10px 0;
+    padding-left: 12px;
+    border-left: 4px solid var(--accent);
     @media screen and (max-width: 768px) {
       font-size: var(--fontMed);
     }

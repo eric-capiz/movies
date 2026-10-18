@@ -4,8 +4,10 @@ export const Wrapper = styled.div`
   display: flex;
   align-items: center;
   min-height: 100px;
-  background: var(--darkGrey);
-  padding: 0 20px;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(229, 9, 20, 0.2);
+  border-bottom: 1px solid rgba(229, 9, 20, 0.2);
+  padding: 20px;
 `;
 
 export const Content = styled.div`
@@ -17,10 +19,12 @@ export const Content = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--medGrey);
-    border-radius: 20px;
-    margin: 0 20px;
+    background: var(--cardBg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    margin: 0 10px;
     flex: 1;
+    padding: 12px;
     :first-child {
       margin-left: 0;
     }
@@ -31,7 +35,7 @@ export const Content = styled.div`
   @media screen and (max-width: 768px) {
     display: block;
     .column {
-      margin: 20px 0;
+      margin: 10px 0;
     }
   }
 `;

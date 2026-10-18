@@ -7,8 +7,13 @@ export const Wrapper = styled.div`
 
   h2 {
     color: var(--white);
-    font-size: var(--fontBig);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     margin: 30px 0 10px 0;
+    padding-left: 12px;
+    border-left: 4px solid var(--accent);
     @media screen and (max-width: 768px) {
       font-size: var(--fontMed);
     }
@@ -50,7 +55,7 @@ export const ArrowButton = styled.button<{ direction: "left" | "right" }>`
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: rgba(28, 28, 28, 0.85);
+  background: rgba(10, 10, 10, 0.9);
   color: var(--white);
   font-size: 1.4rem;
   cursor: pointer;
@@ -58,16 +63,18 @@ export const ArrowButton = styled.button<{ direction: "left" | "right" }>`
   align-items: center;
   justify-content: center;
   transition: all 0.3s;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(229, 9, 20, 0.4);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--darkGrey);
+    background: var(--accent);
+    color: var(--white);
+    border-color: var(--accent);
     transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
   }
 
   &:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 `;
