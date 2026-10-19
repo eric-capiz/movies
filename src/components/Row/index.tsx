@@ -10,6 +10,7 @@ import {
   Dots,
   Dot,
   ArrowButton,
+  RankNumeral,
 } from "./Row.styles";
 import Thumb from "../Thumb";
 import DecoLineDraw from "../effects/DecoLine";
@@ -20,6 +21,7 @@ import { Movie } from "../../API";
 interface RowProps {
   title: string;
   movies: Movie[];
+  variant?: "trending" | "toprated";
 }
 
 const GAP = 16;
@@ -34,22 +36,40 @@ const getPerView = () => {
   return 5;
 };
 
-/* Cards rise in with a quick stagger when the row scrolls into view */
-const rowVariants: Variants = {
+/* Trending: cards cascade in with 3D perspective, pouring toward the viewer */
+const trendingVariants: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.06 } },
+  show: { transition: { staggerChildren: 0.09 } },
 };
 
-const cardVariants: Variants = {
-  hidden: { y: 40, opacity: 0 },
+const trendingCard: Variants = {
+  hidden: { y: 90, opacity: 0, rotateX: -38, scale: 0.92 },
   show: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.45, ease: [0.2, 0.8, 0.25, 1] },
+    rotateX: 0,
+    scale: 1,
+    transition: { type: "spring", stiffness: 160, damping: 17 },
   },
 };
 
-const Row = ({ title, movies }: RowProps) => {
+/* Top Rated: numerals slam in, cards follow */
+const rankedVariants: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.11 } },
+};
+
+const rankedCard: Variants = {
+  hidden: { y: 60, opacity: 0, scale: 0.9 },
+  show: {
+    y: 0,
+    opacity: 1,
+    scale: 1,
+    transition: { type: "spring", stiffness: 140, damping: 16 },
+  },
+};
+
+const Row = ({ title, movies, variant = "trending" }: RowProps) => {
   const [perView, setPerView] = useState(getPerView);
   const [page, setPage] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -87,12 +107,20 @@ const Row = ({ title, movies }: RowProps) => {
     pageGroups.push(movies.slice(i, i + perView));
   }
 
+  const rowVariants = variant === "toprated" ? rankedVariants : trendingVariants;
+  const cardVariants = variant === "toprated" ? rankedCard : trendingCard;
+
   return (
     <Wrapper>
-      <h2>
+      <motion.h2
+        initial={{ opacity: 0, y: 34, filter: "blur(8px)" }}
+        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ type: "spring", stiffness: 120, damping: 17 }}
+      >
         <DecoLineDraw />
         {title}
-      </h2>
+      </motion.h2>
       <RowContainer
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
@@ -106,18 +134,27 @@ const Row = ({ title, movies }: RowProps) => {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-60px" }}
+            style={variant === "trending" ? { transformPerspective: 1100 } : undefined}
           >
           <Track $page={page} $pages={pages}>
             {pageGroups.map((group, pi) => (
               <Page key={pi} $pages={pages} $gap={GAP}>
-                {group.map((movie, ci) => (
+                {group.map((movie, ci) => {
+                  const rank = pi * perView + ci + 1;
+                  return (
                   <CardSlot
                     key={movie.id}
                     $perView={perView}
                     $gap={GAP}
                     $delay={ci * 0.07}
+                    $variant={variant}
                   >
                     <motion.div variants={cardVariants} style={{ height: "100%" }}>
+                      {variant === "toprated" && (
+                        <RankNumeral $top3={rank <= 3} aria-hidden="true">
+                          {rank}
+                        </RankNumeral>
+                      )}
                       <Thumb
                         clickable
                         image={
@@ -131,7 +168,8 @@ const Row = ({ title, movies }: RowProps) => {
                       />
                     </motion.div>
                   </CardSlot>
-                ))}
+                  );
+                })}
               </Page>
             ))}
           </Track>

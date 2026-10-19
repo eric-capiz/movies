@@ -51,13 +51,52 @@ export const Page = styled.div<{ $pages: number; $gap: number }>`
   padding: 0 ${(p) => p.$gap / 2}px;
 `;
 
-export const CardSlot = styled.div<{ $perView: number; $gap: number; $delay: number }>`
+export const CardSlot = styled.div<{ $perView: number; $gap: number; $delay: number; $variant?: "trending" | "toprated" }>`
   flex: 1 1 0;
   min-width: 0;
-  animation: fadeInUp 0.6s ease ${(p) => p.$delay}s both;
+  position: relative;
   /* 3D tilt target */
   transform-style: preserve-3d;
   will-change: transform;
+  ${(p) =>
+    p.$variant === "trending"
+      ? `
+  /* trending hover: card lunges toward the viewer */
+  & > div { transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.25, 1); transform-style: preserve-3d; }
+  &:hover > div { transform: translateZ(46px) scale(1.04); }
+  `
+      : ""}
+`;
+
+/* Giant rank numeral for the Top Rated row — slams in, gold for top 3 */
+export const RankNumeral = styled.span<{ $top3: boolean }>`
+  position: absolute;
+  z-index: 6;
+  top: -26px;
+  left: -6px;
+  font-family: var(--fontSerif);
+  font-weight: 800;
+  font-size: 4.4rem;
+  line-height: 1;
+  pointer-events: none;
+  animation: rankPop 0.55s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+  ${(p) =>
+    p.$top3
+      ? `
+    background: linear-gradient(160deg, #ffe9bd 0%, #e8c98a 35%, #c9a96a 60%, #8a6a3b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 3px 10px rgba(201, 169, 106, 0.55));
+  `
+      : `
+    color: rgba(201, 169, 106, 0.32);
+    -webkit-text-stroke: 1px rgba(201, 169, 106, 0.5);
+  `}
+  @media screen and (max-width: 768px) {
+    font-size: 3rem;
+    top: -18px;
+  }
 `;
 
 export const Dots = styled.div`

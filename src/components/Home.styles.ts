@@ -23,6 +23,7 @@ export const Pill = styled.button<{ $active: boolean }>`
   letter-spacing: 2px;
   text-transform: uppercase;
   cursor: pointer;
+  position: relative;
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.25, 1);
   border: 1px solid
     ${(props) =>
@@ -32,12 +33,31 @@ export const Pill = styled.button<{ $active: boolean }>`
       ? "linear-gradient(120deg, rgba(201,169,106,0.25), rgba(201,169,106,0.08))"
       : "rgba(18, 22, 31, 0.8)"};
   color: ${(props) => (props.$active ? "var(--accentHover)" : "var(--lightGrey)")};
+  ${(props) =>
+    props.$active
+      ? `
+    /* ripple shockwave on select */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 999px;
+      border: 2px solid var(--accent);
+      animation: rippleRing 0.7s ease-out both;
+      pointer-events: none;
+    }
+  `
+      : ""}
 
   &:hover {
     border-color: var(--accent);
     color: var(--accentHover);
     transform: translateY(-2px);
     box-shadow: 0 4px 14px rgba(201, 169, 106, 0.25);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.94);
   }
 
   &:focus {

@@ -7,10 +7,18 @@ interface BackdropProps {
 
 export const Wrapper = styled.div`
   position: relative;
-  height: min(92vh, 760px);
-  min-height: 520px;
+  height: 100vh;
+  height: 100svh;
+  min-height: 640px;
   overflow: hidden;
   background: #0a0e1a;
+`;
+
+export const CarouselLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform, opacity;
 `;
 
 export const Backdrop = styled.div<BackdropProps>`
@@ -69,9 +77,9 @@ export const Content = styled.div`
   padding: 0 20px;
   display: flex;
   align-items: flex-end;
-  padding-bottom: 90px;
+  padding-bottom: 110px;
   @media screen and (max-width: 720px) {
-    padding-bottom: 60px;
+    padding-bottom: 92px;
   }
 `;
 
@@ -89,16 +97,37 @@ export const Text = styled.div`
   }
   h1 {
     font-family: var(--fontSerif);
-    font-size: clamp(2.4rem, 6vw, 4.6rem);
+    font-size: clamp(2.2rem, 5.2vw, 4.4rem);
     font-weight: 800;
-    line-height: 1.05;
+    line-height: 1.08;
     margin: 0 0 18px 0;
     color: var(--white);
     text-shadow: 3px 3px 18px rgba(0, 0, 0, 0.85);
+    /* one line, always — JS scales it down to fit */
+    white-space: nowrap;
+    position: relative;
+    transform-origin: left center;
     .char {
       display: inline-block;
       opacity: 0;
       animation: letterReveal 0.55s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+    }
+    /* gold shimmer sweep across the title after letters land */
+    .title-shimmer {
+      position: absolute;
+      inset: -6% -2%;
+      pointer-events: none;
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(243, 226, 184, 0) 42%,
+        rgba(243, 226, 184, 0.85) 50%,
+        rgba(243, 226, 184, 0) 58%,
+        transparent 100%
+      );
+      mix-blend-mode: overlay;
+      transform: translateX(-130%) skewX(-18deg);
+      animation: titleShimmer 1.4s cubic-bezier(0.4, 0, 0.2, 1) 1.6s both;
     }
   }
   p {
@@ -149,6 +178,30 @@ export const CtaButton = styled.a`
     color: var(--accentHover);
     border-color: var(--accentHover);
     transform: translateY(-2px);
+  }
+`;
+
+export const ScrollCue = styled.div`
+  position: absolute;
+  z-index: 10;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  span {
+    font-size: 0.68rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: var(--fontSerif);
+    font-style: italic;
+  }
+  svg {
+    animation: scrollHint 2.2s ease-in-out infinite;
+    filter: drop-shadow(0 0 6px rgba(201, 169, 106, 0.8));
   }
 `;
 

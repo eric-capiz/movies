@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { motion } from "framer-motion";
 import { POSTER_SIZE, BACKDROP_SIZE, IMAGE_BASE_URL } from "../config";
 import { useHomeFetch } from "../hooks/useHomeFetch";
 import { useWatchlistContext } from "../hooks/WatchlistContext";
@@ -153,12 +154,18 @@ const Home = () => {
 
       {isBrowsing && (
         <>
-          <Row title="Trending Now" movies={trending} />
+          <Row title="Trending Now" movies={trending} variant="trending" />
           <DecoDivider />
-          <Row title="Top Rated" movies={topRated} />
+          <Row title="Top Rated" movies={topRated} variant="toprated" />
           <DecoDivider />
           <WatchlistSection>
-            <SectionHeader>
+            <SectionHeader
+              as={motion.h2}
+              initial={{ opacity: 0, y: 34, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ type: "spring", stiffness: 120, damping: 17 }}
+            >
               <DecoLineDraw />
               My Watchlist
             </SectionHeader>
@@ -214,7 +221,7 @@ const Home = () => {
           ))}
         </WatchlistGrid>
       ) : (
-        <Grid header={gridHeader}>
+        <Grid key={`${searchTerm}-${selectedGenre}`} header={gridHeader}>
           {gridMovies.map((movie: Movie) => (
             <Thumb
               key={movie.id}

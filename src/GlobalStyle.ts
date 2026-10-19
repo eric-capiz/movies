@@ -137,6 +137,61 @@ export const GlobalStyle = createGlobalStyle`
     75% { background-position: -30px -50px; }
     100% { background-position: 0 0; }
   }
+  /* ---------- cinematic motion set ---------- */
+  @keyframes emberRise {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+    8% { opacity: 0.95; }
+    70% { opacity: 0.55; }
+    100% { transform: translateY(-108vh) translateX(46px) scale(0.35); opacity: 0; }
+  }
+  @keyframes bobFloat {
+    0%, 100% { transform: translateY(-9px); }
+    50% { transform: translateY(9px); }
+  }
+  @keyframes titleShimmer {
+    0% { transform: translateX(-130%) skewX(-18deg); }
+    100% { transform: translateX(250%) skewX(-18deg); }
+  }
+  @keyframes scrollHint {
+    0%, 100% { transform: translateY(0); opacity: 0.9; }
+    50% { transform: translateY(12px); opacity: 0.4; }
+  }
+  @keyframes rankPop {
+    0% { transform: scale(0.3) rotate(-8deg); opacity: 0; }
+    60% { transform: scale(1.18) rotate(2deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  @keyframes heartBurst {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.7); filter: brightness(1.8); }
+    100% { transform: scale(1); }
+  }
+  @keyframes rippleRing {
+    0% { transform: scale(0.6); opacity: 0.9; }
+    100% { transform: scale(1.9); opacity: 0; }
+  }
+  @keyframes frameDraw {
+    0% { clip-path: inset(0 100% 100% 0); opacity: 1; }
+    50% { clip-path: inset(0 0 100% 0); opacity: 1; }
+    100% { clip-path: inset(0 0 0 0); opacity: 1; }
+  }
+  @keyframes backdropZoom {
+    0% { transform: scale(1.22); }
+    100% { transform: scale(1.02); }
+  }
+  @keyframes titleCrash {
+    0% { opacity: 0; transform: translateY(90px) scale(1.12); filter: blur(14px); }
+    60% { opacity: 1; transform: translateY(-6px) scale(0.99); filter: blur(0); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 14px rgba(201, 169, 106, 0.55); }
+    50% { box-shadow: 0 0 30px rgba(232, 201, 138, 0.95); }
+  }
+  @keyframes searchExpand {
+    0% { letter-spacing: 6px; opacity: 0; }
+    100% { letter-spacing: 1px; opacity: 1; }
+  }
 
   /* ---------- film grain overlay ---------- */
   .film-grain {

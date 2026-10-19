@@ -39,6 +39,21 @@ export const ThumbWrapper = styled.div`
   &:hover::after {
     animation: shimmerSweep 0.9s ease;
   }
+  /* gold frame draws itself around the card on hover */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    border: 2px solid #f3e2b8;
+    border-radius: 4px;
+    opacity: 0;
+    box-shadow: 0 0 18px rgba(243, 226, 184, 0.7), inset 0 0 18px rgba(243, 226, 184, 0.25);
+  }
+  &:hover::before {
+    animation: frameDraw 0.65s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+  }
 `;
 
 export const Image = styled.img`
@@ -131,7 +146,7 @@ export const WatchlistButton = styled.button<{ $saved: boolean }>`
   }
 
   &:active {
-    animation: popIn 0.35s ease;
+    animation: heartBurst 0.45s cubic-bezier(0.2, 0.8, 0.25, 1);
   }
 
   &:focus {

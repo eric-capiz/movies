@@ -10,18 +10,20 @@ interface MovieInfoProps {
   movie: MovieState;
 }
 
-/* Info sections rise in quickly, guiding the eye down the hierarchy */
+/* Cinematic choreography: backdrop pushes in, title crashes with impact,
+   panels follow in sequence like opening credits */
 const infoVariants: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.14, delayChildren: 0.45 } },
 };
 
 const sectionVariants: Variants = {
-  hidden: { y: 18, opacity: 0 },
+  hidden: { y: 44, opacity: 0, filter: "blur(6px)" },
   show: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.4, ease: [0.2, 0.8, 0.25, 1] },
+    filter: "blur(0px)",
+    transition: { type: "spring", stiffness: 120, damping: 17 },
   },
 };
 
@@ -63,7 +65,14 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
           initial="hidden"
           animate="show"
         >
-          <motion.h1 variants={sectionVariants}>{movie.title}</motion.h1>
+          <motion.h1
+            initial={{ opacity: 0, y: 90, scale: 1.12 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 90, damping: 13, delay: 0.15 }}
+            style={{ transformOrigin: "left center" }}
+          >
+            {movie.title}
+          </motion.h1>
           <motion.div variants={sectionVariants}>
             <h3>PLOT</h3>
             <p>{movie.overview}</p>

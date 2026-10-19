@@ -17,7 +17,8 @@ export const Wrapper = styled.div`
   }
 `;
 
-/* Backdrop sits on its own layer so it can parallax slower than the content */
+/* Backdrop sits on its own layer so it can parallax slower than the content.
+   Slow cinematic push-in on load. */
 export const BackdropLayer = styled.div<{ $backdrop: string }>`
   position: absolute;
   inset: -12% 0;
@@ -26,6 +27,7 @@ export const BackdropLayer = styled.div<{ $backdrop: string }>`
   background-size: cover;
   background-position: center;
   will-change: transform;
+  animation: backdropZoom 9s ease-out both;
 `;
 
 export const Content = styled.div`
@@ -55,6 +57,8 @@ export const RatingBar = styled.div`
     border-radius: 2px;
     background: linear-gradient(to right, #8a6a3b, var(--accent), #f3e2b8);
     box-shadow: 0 0 8px rgba(201, 169, 106, 0.55);
+    /* glow pulse once the bar lands */
+    animation: glowPulse 1.6s ease-in-out 1.1s 2;
   }
 `;
 
