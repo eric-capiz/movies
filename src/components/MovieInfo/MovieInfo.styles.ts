@@ -1,16 +1,11 @@
 import styled from "styled-components";
 import { IMAGE_BASE_URL, BACKDROP_SIZE } from "../../config";
 
-interface WrapperProps {
-  backdrop: string;
-}
-
-export const Wrapper = styled.div<WrapperProps>`
-  background: ${({ backdrop }) =>
-    backdrop ? `url('${IMAGE_BASE_URL}${BACKDROP_SIZE}${backdrop}')` : "#000"};
-  background-size: cover;
-  background-position: center;
+export const Wrapper = styled.div`
+  position: relative;
+  overflow: hidden;
   padding: 40px 20px;
+  background: #000;
   animation: animateMovieinfo 1s;
   @keyframes animateMovieinfo {
     from {
@@ -22,7 +17,20 @@ export const Wrapper = styled.div<WrapperProps>`
   }
 `;
 
+/* Backdrop sits on its own layer so it can parallax slower than the content */
+export const BackdropLayer = styled.div<{ $backdrop: string }>`
+  position: absolute;
+  inset: -12% 0;
+  background: ${({ $backdrop }) =>
+    $backdrop ? `url('${IMAGE_BASE_URL}${BACKDROP_SIZE}${$backdrop}')` : "#000"};
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+`;
+
 export const Content = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   max-width: 1280px;
   margin: 0 auto;
@@ -31,6 +39,22 @@ export const Content = styled.div`
   @media screen and (max-width: 768px) {
     display: block;
     max-height: none;
+  }
+`;
+
+export const RatingBar = styled.div`
+  margin-top: 10px;
+  width: 120px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(201, 169, 106, 0.18);
+  overflow: hidden;
+  span {
+    display: block;
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(to right, #8a6a3b, var(--accent), #f3e2b8);
+    box-shadow: 0 0 8px rgba(201, 169, 106, 0.55);
   }
 `;
 

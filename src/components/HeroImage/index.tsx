@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import {
   Wrapper,
-  Backdrop,
   Shade,
   Content,
   Text,
@@ -11,10 +11,13 @@ import {
   SlideDot,
 } from "./HeroImage.styles";
 import GoldDust from "../effects/GoldDust";
+import Hero3D from "../Hero3D/Hero3D";
+import Magnetic from "../effects/Magnetic";
 
 export interface FeaturedMovie {
   id: number;
   image: string;
+  poster: string;
   title: string;
   text: string;
 }
@@ -43,17 +46,32 @@ const HeroImage = ({ movies }: HeroImageProps) => {
 
   const letters = useMemo(() => movie.title.split(""), [movie.title]);
 
+  /* Scroll-driven cinematic exit: content lifts and dissolves as you scroll away */
+  const heroRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 0.75], [0, 90]);
+  const contentScale = useTransform(scrollYProgress, [0, 0.75], [1, 0.96]);
+  const contentStyle = reduceMotion
+    ? undefined
+    : { opacity: contentOpacity, y: contentY, scale: contentScale };
+
+  const posters = useMemo(() => movies.map((m) => m.poster), [movies]);
+
   return (
     <Wrapper
+      ref={heroRef}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {movies.map((m, i) => (
-        <Backdrop key={m.id} image={m.image} $active={i === index} />
-      ))}
+      <Hero3D posters={posters} fallbackImage={movies[0]?.image ?? ""} />
       <Shade />
       <GoldDust count={26} />
-      <Content>
+      <Content as={motion.div} style={contentStyle}>
         <Text key={movie.id}>
           <div className="eyebrow">&#9670; Featured Premiere &#9670;</div>
           <h1 aria-label={movie.title}>
@@ -69,7 +87,9 @@ const HeroImage = ({ movies }: HeroImageProps) => {
           </h1>
           <p>{movie.text}</p>
           <CtaRow>
-            <CtaButton href={`/${movie.id}`}>&#9654; View Details</CtaButton>
+            <Magnetic strength={0.25}>
+              <CtaButton href={`/${movie.id}`}>&#9654; View Details</CtaButton>
+            </Magnetic>
           </CtaRow>
         </Text>
       </Content>

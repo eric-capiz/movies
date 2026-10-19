@@ -10,6 +10,7 @@ import Spinner from "./Spinner";
 import Search from "./Search";
 import Button from "./Button";
 import DecoDivider from "./effects/DecoDivider";
+import DecoLineDraw from "./effects/DecoLine";
 import Marquee from "./effects/Marquee";
 import SkeletonCard from "./effects/SkeletonCard";
 import NoImage from "../images/no_image.jpg";
@@ -110,6 +111,9 @@ const Home = () => {
         .map((m) => ({
           id: m.id,
           image: `${IMAGE_BASE_URL}${BACKDROP_SIZE}${m.backdrop_path}`,
+          poster: m.poster_path
+            ? `${IMAGE_BASE_URL}${POSTER_SIZE}${m.poster_path}`
+            : NoImage,
           title: m.original_title,
           text: m.overview,
         })),
@@ -154,7 +158,10 @@ const Home = () => {
           <Row title="Top Rated" movies={topRated} />
           <DecoDivider />
           <WatchlistSection>
-            <SectionHeader>My Watchlist</SectionHeader>
+            <SectionHeader>
+              <DecoLineDraw />
+              My Watchlist
+            </SectionHeader>
             {watchlistMovies.length > 0 ? (
               <WatchlistGrid>
                 {watchlistMovies.map((movie) => (

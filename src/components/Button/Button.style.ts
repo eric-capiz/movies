@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
-export const Wrapper = styled.button`
+export const Wrapper = styled(motion.button)`
   display: block;
   background: transparent;
   width: 25%;
@@ -13,7 +14,6 @@ export const Wrapper = styled.button`
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
-  margin: 20px auto;
   transition: all 0.3s;
   outline: none;
   cursor: pointer;

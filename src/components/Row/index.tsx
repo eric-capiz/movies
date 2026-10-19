@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { motion, type Variants } from "framer-motion";
 import {
   Wrapper,
   RowContainer,
@@ -11,6 +12,7 @@ import {
   ArrowButton,
 } from "./Row.styles";
 import Thumb from "../Thumb";
+import DecoLineDraw from "../effects/DecoLine";
 import { POSTER_SIZE, IMAGE_BASE_URL } from "../../config";
 import NoImage from "../../images/no_image.jpg";
 import { Movie } from "../../API";
@@ -32,35 +34,19 @@ const getPerView = () => {
   return 5;
 };
 
-/* 3D tilt card — desktop pointers only, transform-only */
-const TiltCard = ({ children }: { children: React.ReactNode }) => {
-  const ref = useRef<HTMLDivElement>(null);
+/* Cards rise in with a quick stagger when the row scrolls into view */
+const rowVariants: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06 } },
+};
 
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5;
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    el.style.transform = `perspective(900px) rotateY(${px * 10}deg) rotateX(${-py * 10}deg)`;
-  };
-
-  const onLeave = () => {
-    const el = ref.current;
-    if (el) el.style.transform = "perspective(900px) rotateY(0deg) rotateX(0deg)";
-  };
-
-  return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{ transition: "transform 0.25s ease", transformStyle: "preserve-3d" }}
-    >
-      {children}
-    </div>
-  );
+const cardVariants: Variants = {
+  hidden: { y: 40, opacity: 0 },
+  show: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.45, ease: [0.2, 0.8, 0.25, 1] },
+  },
 };
 
 const Row = ({ title, movies }: RowProps) => {
@@ -103,7 +89,10 @@ const Row = ({ title, movies }: RowProps) => {
 
   return (
     <Wrapper>
-      <h2>{title}</h2>
+      <h2>
+        <DecoLineDraw />
+        {title}
+      </h2>
       <RowContainer
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
@@ -112,6 +101,12 @@ const Row = ({ title, movies }: RowProps) => {
           &#8249;
         </ArrowButton>
         <Viewport>
+          <motion.div
+            variants={rowVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+          >
           <Track $page={page} $pages={pages}>
             {pageGroups.map((group, pi) => (
               <Page key={pi} $pages={pages} $gap={GAP}>
@@ -122,7 +117,7 @@ const Row = ({ title, movies }: RowProps) => {
                     $gap={GAP}
                     $delay={ci * 0.07}
                   >
-                    <TiltCard>
+                    <motion.div variants={cardVariants} style={{ height: "100%" }}>
                       <Thumb
                         clickable
                         image={
@@ -134,12 +129,13 @@ const Row = ({ title, movies }: RowProps) => {
                         title={movie.title}
                         rating={movie.vote_average}
                       />
-                    </TiltCard>
+                    </motion.div>
                   </CardSlot>
                 ))}
               </Page>
             ))}
           </Track>
+          </motion.div>
         </Viewport>
         <ArrowButton direction="right" onClick={() => go(1)} aria-label="Next">
           &#8250;

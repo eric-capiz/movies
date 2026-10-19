@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import searchIcon from "../../images/search-icon.svg";
 import { Wrapper, Content } from "./Search.styles";
+import Magnetic from "../effects/Magnetic";
 
 // void menas function does not return anything
 
@@ -27,17 +28,23 @@ const Search = ({ setSeachTerm }: SearchProps) => {
 
   return (
     <Wrapper>
-      <Content>
-        <img src={searchIcon} alt="search-icon" />
-        <input
-          type="text"
-          placeholder="Search Movies..."
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setState(e.currentTarget.value)
-          }
-          value={state}
-        />
-      </Content>
+      <Magnetic
+        strength={0.12}
+        className="search-magnetic"
+        style={{ display: "block", width: "100%", maxWidth: "var(--maxWidth)", margin: "0 auto" }}
+      >
+        <Content>
+          <img src={searchIcon} alt="search-icon" />
+          <input
+            type="text"
+            placeholder="Search Movies..."
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setState(e.currentTarget.value)
+            }
+            value={state}
+          />
+        </Content>
+      </Magnetic>
     </Wrapper>
   );
 };

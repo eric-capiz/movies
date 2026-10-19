@@ -15,12 +15,6 @@ export const Wrapper = styled.div`
     display: flex;
     align-items: center;
     gap: 14px;
-    &::before {
-      content: "";
-      width: 34px;
-      height: 2px;
-      background: linear-gradient(to right, transparent, var(--accent));
-    }
     &::after {
       content: "\u2726";
       color: var(--accent);

@@ -130,15 +130,23 @@ export const GlobalStyle = createGlobalStyle`
     from { background-position: -400px 0; }
     to { background-position: 400px 0; }
   }
+  @keyframes grainShift {
+    0% { background-position: 0 0; }
+    25% { background-position: -60px 40px; }
+    50% { background-position: 40px -70px; }
+    75% { background-position: -30px -50px; }
+    100% { background-position: 0 0; }
+  }
 
   /* ---------- film grain overlay ---------- */
   .film-grain {
     pointer-events: none;
     position: fixed;
-    inset: 0;
+    inset: -60px;
     z-index: 9990;
     opacity: 0.05;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grainShift 1.4s steps(4) infinite;
   }
 
   /* ---------- aurora light streaks ---------- */
@@ -188,6 +196,9 @@ export const GlobalStyle = createGlobalStyle`
   .cursor-glow {
     display: none;
   }
+  .cursor-dot {
+    display: none;
+  }
   @media (pointer: fine) {
     .cursor-glow {
       display: block;
@@ -201,6 +212,19 @@ export const GlobalStyle = createGlobalStyle`
       background: radial-gradient(circle, rgba(201,169,106,0.10) 0%, transparent 60%);
       transform: translate3d(0, 0, 0);
     }
+    .cursor-dot {
+      display: block;
+      pointer-events: none;
+      position: fixed;
+      width: 9px;
+      height: 9px;
+      margin: -4.5px 0 0 -4.5px;
+      border-radius: 50%;
+      z-index: 9992;
+      background: radial-gradient(circle at 35% 35%, #f3e2b8 0%, #c9a96a 70%);
+      box-shadow: 0 0 10px rgba(201, 169, 106, 0.65);
+      transform: translate3d(0, 0, 0);
+    }
   }
 
   /* ---------- reduced motion ---------- */
@@ -210,6 +234,6 @@ export const GlobalStyle = createGlobalStyle`
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
-    .aurora, .film-grain, .cursor-glow, .gold-dust { display: none !important; }
+    .aurora, .film-grain, .cursor-glow, .cursor-dot, .gold-dust { display: none !important; }
   }
 `

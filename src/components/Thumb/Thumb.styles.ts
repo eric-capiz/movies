@@ -45,12 +45,13 @@ export const Image = styled.img`
   width: 100%;
   height: 100%;
   max-width: 720px;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, filter 0.5s ease;
   object-fit: cover;
   border-radius: 4px;
   display: block;
   ${ThumbWrapper}:hover & {
     transform: scale(1.07);
+    filter: brightness(1.12) saturate(1.06);
   }
 `;
 
