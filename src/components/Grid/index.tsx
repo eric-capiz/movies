@@ -1,11 +1,20 @@
-import React from "react";
-import { motion, type Variants, useReducedMotion } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import {
+  motion,
+  type Variants,
+  useReducedMotion,
+  useInView,
+  useAnimation,
+} from "framer-motion";
 import { Wrapper, Content } from "./Grid.styles";
 import DecoLineDraw from "../effects/DecoLine";
 
 interface GridProps {
   header: string;
   children: React.ReactNode;
+  /** True when the grid's data is loaded. Entrance only plays when ready,
+      so a whileInView trigger on an empty container can't get stuck hidden. */
+  ready?: boolean;
 }
 
 /* Masonry-style entrance: cards wipe in with a clip-path reveal + rise,
@@ -31,9 +40,23 @@ const cellVariants: Variants = {
   },
 };
 
-const Grid = ({ header, children }: GridProps) => {
+const Grid = ({ header, children, ready = true }: GridProps) => {
   const reduceMotion = useReducedMotion();
   const items = React.Children.toArray(children);
+
+  /* Data-aware entrance: start the staggered reveal only when the container
+     is in view AND data is present. A plain whileInView with once:true would
+     fire on the empty container during the fetch and freeze cards at
+     opacity 0 forever. */
+  const controls = useAnimation();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(contentRef, { once: true, margin: "-40px" });
+
+  useEffect(() => {
+    if (inView && ready && items.length > 0) {
+      controls.start("show");
+    }
+  }, [inView, ready, items.length, controls]);
 
   return (
     <Wrapper>
@@ -51,10 +74,10 @@ const Grid = ({ header, children }: GridProps) => {
       ) : (
         <Content
           as={motion.div}
+          ref={contentRef}
           variants={gridVariants}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-40px" }}
+          animate={controls}
         >
           {items.map((child, i) => (
             <motion.div key={i} variants={cellVariants}>

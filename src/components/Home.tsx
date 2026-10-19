@@ -221,7 +221,11 @@ const Home = () => {
           ))}
         </WatchlistGrid>
       ) : (
-        <Grid key={`${searchTerm}-${selectedGenre}`} header={gridHeader}>
+        <Grid
+          key={`${searchTerm}-${selectedGenre}`}
+          header={gridHeader}
+          ready={gridMovies.length > 0}
+        >
           {gridMovies.map((movie: Movie) => (
             <Thumb
               key={movie.id}

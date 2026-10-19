@@ -1,5 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { motion, type Variants } from "framer-motion";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import {
+  motion,
+  type Variants,
+  useInView,
+  useAnimation,
+} from "framer-motion";
 import {
   Wrapper,
   RowContainer,
@@ -74,6 +79,20 @@ const Row = ({ title, movies, variant = "trending" }: RowProps) => {
   const [page, setPage] = useState(0);
   const [paused, setPaused] = useState(false);
 
+  /* Data-aware entrance (same pattern as Grid): only start the staggered
+     cascade when in view AND movies are loaded, so the trigger can't fire
+     on an empty container and lock cards at opacity 0. */
+  const controls = useAnimation();
+  const trackRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(trackRef, { once: true, margin: "-60px" });
+  const ready = movies.length > 0;
+
+  useEffect(() => {
+    if (inView && ready) {
+      controls.start("show");
+    }
+  }, [inView, ready, controls]);
+
   useEffect(() => {
     const onResize = () => {
       setPerView(getPerView());
@@ -130,10 +149,10 @@ const Row = ({ title, movies, variant = "trending" }: RowProps) => {
         </ArrowButton>
         <Viewport>
           <motion.div
+            ref={trackRef}
             variants={rowVariants}
             initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-60px" }}
+            animate={controls}
             style={variant === "trending" ? { transformPerspective: 1100 } : undefined}
           >
           <Track $page={page} $pages={pages}>
