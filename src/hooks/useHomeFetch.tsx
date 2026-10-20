@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../API";
 import { isPersistedState } from "../helpers";
-import { Movie, MoviesResponse } from "../API";
+import { MoviesResponse } from "../API";
 
 const initialState: MoviesResponse = {
   page: 0,
